@@ -23,21 +23,21 @@ namespace Jamoki.Games.Spider
         #region Properties
         public TimeSpan ElapsedTimeSpan
         {
-            get 
+            get
             {
                 return new TimeSpan(0, 0, ElapsedSeconds);
             }
         }
         public int ElapsedSeconds
         {
-            get 
+            get
             {
                 lock (elapsedSecondsLock)
                 {
                     return elapsedSeconds;
                 }
             }
-            set 
+            set
             {
                 lock (elapsedSecondsLock)
                 {
@@ -55,7 +55,7 @@ namespace Jamoki.Games.Spider
         public Stack<Move> SavedMoves { get; set; }
         public IGameBoardEvents GameBoardEvents { get; set; }
 
-        #endregion  
+        #endregion
 
         #region Construction
         public GameBoard(Difficulty difficulty, IGameBoardEvents gameBoardEvents)
@@ -103,7 +103,7 @@ namespace Jamoki.Games.Spider
         }
 
         #endregion
-  
+
         #region Methods
         public void ShuffleAndCreateTableau()
         {
@@ -194,10 +194,10 @@ namespace Jamoki.Games.Spider
         public void DealDrawPile()
         {
             int priorScore = this.Score;
-            
+
             Score--;
             NumMoves++;
-            
+
             List<CardAction> actions = new List<CardAction>();
             List<Card> drawPile = DrawPiles.Last();
 
@@ -210,7 +210,7 @@ namespace Jamoki.Games.Spider
                 card.FaceUp = true;
                 PlayPiles[pileIndex].Add(card);
                 actions.Add(new CardAction(
-                    card, CardActionType.Move, card.Location, 
+                    card, CardActionType.Move, card.Location,
                     card.Location = new CardLocation(PileType.Play, pileIndex, PlayPiles[pileIndex].Count - 1)));
             }
 
@@ -253,7 +253,7 @@ namespace Jamoki.Games.Spider
             List<Card> fromPile = PlayPiles[fromPileIndex];
             List<Card> toPile = PlayPiles[toPileIndex];
 
-            // Keep the play piles consistent by moving the cards into 
+            // Keep the play piles consistent by moving the cards into
             // a holding list instead of moving them one at a time.
             List<Card> dragPile = fromPile.GetRange(fromCardIndex, fromPile.Count - fromCardIndex);
 
@@ -262,10 +262,10 @@ namespace Jamoki.Games.Spider
             for (int i = 0; i < dragPile.Count; i++)
             {
                 Card card = dragPile[i];
-                
+
                 toPile.Add(card);
                 actions.Add(
-                    new CardAction(card, CardActionType.Move, card.Location, 
+                    new CardAction(card, CardActionType.Move, card.Location,
                         card.Location = new CardLocation(PileType.Play, toPileIndex, toPile.Count - 1)));
             }
 
@@ -391,7 +391,7 @@ namespace Jamoki.Games.Spider
             // Move dragged cards into holding list
             int index = toPile.Count - move.NumCardsDragged;
             List<Card> dragPile = toPile.GetRange(index, move.NumCardsDragged);
-            
+
             toPile.RemoveRange(index, move.NumCardsDragged);
 
             for (int i = 0; i < dragPile.Count; i++)
@@ -399,7 +399,7 @@ namespace Jamoki.Games.Spider
                 card = dragPile[i];
                 fromPile.Add(card);
                 actions.Add(new CardAction(
-                    card, CardActionType.Move, card.Location, 
+                    card, CardActionType.Move, card.Location,
                     card.Location = new CardLocation(PileType.Play, move.FromPileIndex, fromPile.Count - 1)));
             }
 
@@ -495,7 +495,7 @@ namespace Jamoki.Games.Spider
                 this.DiscardPile.Add(card);
 
                 actions.Add(
-                    new CardAction(card, CardActionType.Move, card.Location, 
+                    new CardAction(card, CardActionType.Move, card.Location,
                         card.Location = new CardLocation(PileType.Discard, 0, this.DiscardPile.Count - 1)));
             }
 
@@ -518,7 +518,7 @@ namespace Jamoki.Games.Spider
                 this.PlayPiles[toPileIndex].Add(card);
 
                 actions.Add(new CardAction(
-                    card, CardActionType.Move, card.Location, 
+                    card, CardActionType.Move, card.Location,
                     card.Location = new CardLocation(PileType.Play, toPileIndex, this.PlayPiles[toPileIndex].Count - 1)));
             }
         }
@@ -551,7 +551,7 @@ namespace Jamoki.Games.Spider
             card.FaceUp = true;
 
             actions.Add(new CardAction(card, CardActionType.Flip));
-            
+
             return true;
         }
 
@@ -623,7 +623,7 @@ namespace Jamoki.Games.Spider
 
                         // No face down cards, just use the pile with the most cards
                         // and just remove the top card
-                        // TODO-john-2012: This could be improved to remove as many cards 
+                        // TODO-john-2012: This could be improved to remove as many cards
                         // as possible, unless the entire pile is a run in which case
                         // switch pick another pile.
                         for (int i = 0; i < NumPlayPiles; i++)

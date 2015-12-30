@@ -1,43 +1,9 @@
 require 'ostruct'
 require 'optparse'
 require 'colorize'
+require_relative './core_ext.rb'
 
 $VERSION='1.0.0-20151230.1'
-
-class String
-  def camelcase(*separators)
-    case separators.first
-      when Symbol, TrueClass, FalseClass, NilClass
-        first_letter = separators.shift
-    end
-
-    separators = ['_'] if separators.empty?
-
-    str = self.dup
-
-    separators.each do |s|
-      str = str.gsub(/(?:#{s}+)([a-z])/){ $1.upcase }
-    end
-
-    case first_letter
-      when :upper, true
-        str = str.gsub(/(\A|\s)([a-z])/){ $1 + $2.upcase }
-      when :lower, false
-        str = str.gsub(/(\A|\s)([A-Z])/){ $1 + $2.downcase }
-    end
-
-    str
-  end
-
-  def upper_camelcase(*separators)
-    camelcase(:upper, *separators)
-  end
-
-  def lower_camelcase(*separators)
-    camelcase(:lower, *separators)
-  end
-
-end
 
 class Csharp2Swift
 
@@ -123,6 +89,7 @@ framework usage.
     convert_list_type(content)
     convert_debug_assert(content)
     remove_new(content)
+    insert_import(content)
 
     # Slightly more complicated stuff
     remove_namespace(content)
@@ -229,22 +196,43 @@ framework usage.
     content.gsub!(/new /, '')
   end
 
+  def insert_import(content)
+    content.insert(0, "import Foundation\n")
+  end
+
   def remove_namespace(content)
     re = / *namespace +.+ *\{$/
     m = re.match(content)
-    i = m.end(0) + 1
+
+    if m == nil
+      return
+    end
+
+    i = m.end(0)
     n = 1
+    bol = (content[i] == "\n")
     while i < content.length do
       c = content[i]
-      if c == "{"
-        n += 1
-      elsif c == "}"
-        n -= 1
-        if n == 0
-          content.slice!(i)
-          content.slice!(m.begin(0)..m.end(0))
-          break
-        end
+
+      if bol and c == " " and i + 3 < content.length
+        content.slice!(i..(i + 3))
+        c = content[i]
+      end
+
+      case c
+        when "{"
+          n += 1
+        when "}"
+          n -= 1
+          if n == 0
+            content.slice!(i) # Take out the end curly
+            content.slice!(m.begin(0)..m.end(0)) # Take out the original namespace
+            break
+          end
+        when "\n"
+          bol = true
+        else
+          bol = false
       end
       i += 1
     end
@@ -293,7 +281,7 @@ framework usage.
 
   def convert_method_decl_to_func_decl(content)
     # TODO: Override should be captured and re-inserted
-    content.gsub!(/(?:(?:public|internal|private) +(?:override|))(.+) +(.*)\((.*)\) *\{/) { |m|
+    content.gsub!(/(?:(?:public|internal|private) +)(?:override +|)(.+) +(.*)\((.*)\) *\{/) { |m|
       f = $2
       nf = f.lower_camelcase
       @renamed_methods[f] = nf
@@ -306,7 +294,7 @@ framework usage.
   end
 
   def convert_locals(content)
-    content.gsub!(/^( *)(?!return)([A-Za-z0-9_\[\]<>]+) +(\w+)(?:( *= *.+)|)$/, '\\1let \\3\\4')
+    content.gsub!(/^( *)(?!return|import)([A-Za-z0-9_\[\]<>]+) +(\w+)(?:( *= *.+)|)$/, '\\1let \\3\\4')
   end
 
   def convert_if(content)

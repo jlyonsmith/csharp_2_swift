@@ -12,6 +12,12 @@ Install the tool with:
 gem install csharp_2_swift
 ```
 
+**IMPORTANT:** You need to untabify your source code before running the tool.  For now, `csharp_2_swift` assumes multiples of 4 spaces as the indentation level.  You can use `spacer` from my [code_tools](https://rubygems.org/gems/code_tools) Gem to achieve that, like so:
+
+```bash
+spacer -mode spaces -t 4 -r SomeCode.cs
+```
+
 Then run it on some C# code like so:
 
 ```bash
