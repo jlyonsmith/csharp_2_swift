@@ -1,11 +1,11 @@
 Gem::Specification.new do |s|
   s.name = 'csharp_2_swift'
   s.version = '1.0.0'
-  s.date = '2015-12-29'
+  s.date = '2015-12-30'
   s.summary = "Simple C# to Swift Converter"
-  s.description = %Q(A tool that does a rough conversion of C# code to Swift.
+  s.description = %Q(A tool that does a simple conversion of C# code to Swift.
 It hits the major stuff, like re-ordering parameters, field/property declarations, for loop syntax
-and lets you figure out the library related stuff.
+and leaves you to figure out the framework related stuff.
 )
   s.authors = ["John Lyon-smith"]
   s.email = "john@jamoki.com"

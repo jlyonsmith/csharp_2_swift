@@ -2,7 +2,7 @@ require 'ostruct'
 require 'optparse'
 require 'colorize'
 
-$VERSION='1.0.0-20151227.0'
+$VERSION='1.0.0-20151230.1'
 
 class String
   def camelcase(*separators)
@@ -346,7 +346,7 @@ framework usage.
   end
 
   def error(msg)
-    STDERR.puts "error: #{msg}".colorize(:red)
+    STDERR.puts "error: #{msg}".red
   end
 
 end
