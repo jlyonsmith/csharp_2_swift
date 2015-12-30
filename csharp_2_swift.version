@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Version BuildValueType="FullDate">
+  <Files>
+    <File>lib/csharp_2_swift.rb</File>
+    <File>csharp_2_swift.gemspec</File>
+  </Files>
+  <Tags>
+    <Major>1</Major>
+    <Minor>0</Minor>
+    <Patch>0</Patch>
+    <Build>20151229</Build>
+    <Revision>0</Revision>
+    <TimeZone>US/Pacific</TimeZone>
+    <StartYear>2015</StartYear>
+    <Company>John Lyon-Smith</Company>
+    <Product>Csharp2Swift</Product>
+    <Copyright>Copyright (c) 2015, John Lyon-Smith</Copyright>
+  </Tags>
+</Version>
