@@ -50,22 +50,29 @@ class Csharp2Swift
     options = OpenStruct.new
     options.output_filename = ''
     options.input_filename = nil
+    options.convert_simple_for_loops = false
 
     opt_parser = OptionParser.new do |opts|
       opts.banner = %Q(Roughly Convert C# to Swift. Version #{$VERSION}
 Copyright (c) John Lyon-Smith, 2015.
-Usage:            #{File.basename(__FILE__)} [options]
+Usage:            #{File.basename(__FILE__)} [options] FILE
 )
       opts.separator %Q(Description:
-This tool does a very rough conversion of C# source code to Swift.  The goal of the tool
-is to do most easy stuff that simply requires a lot of typing effort, and allow you to concentrate
-on the more difficult aspects of the conversion. This tool will NOT generate working code!
+This tool does a rough conversion of C# source code to Swift.  The goal of the tool
+is to do most of the easy stuff that simply requires a lot of typing effort, and allow you
+to concentrate on the more difficult aspects of the conversion, such as library and
+framework usage.
 )
       opts.separator %Q(Options:
 )
 
       opts.on("-o", "--output FILE", String, "The output file.  Default is the same as the input file.") do |file|
         options.output_filename = File.expand_path(file)
+      end
+
+      opts.on("--convert_simple_for_loops", "Convert simple range based for loops, e.g. for(int i = 0; i < 10; i++) { }",
+        "to range based loops of the form for i in 0..<10 { }") do |convert|
+        options.convert_simple_for_loops = convert
       end
 
       opts.on_tail("-?", "--help", "Show this message") do
@@ -75,7 +82,7 @@ on the more difficult aspects of the conversion. This tool will NOT generate wor
     end
 
     opt_parser.parse!(args)
-    options.input_filename = ARGV.pop
+    options.input_filename = args.pop
     if options.input_filename == nil
       error 'Need to specify a file to process'
       exit
@@ -84,8 +91,8 @@ on the more difficult aspects of the conversion. This tool will NOT generate wor
     options
   end
 
-  def execute
-    options = self.parse(ARGV)
+  def execute(args)
+    options = self.parse(args)
 
     if !File.exist?(options.input_filename)
       error "File #{options.input_filename} does not exist"
@@ -128,7 +135,9 @@ on the more difficult aspects of the conversion. This tool will NOT generate wor
     convert_locals(content)
     convert_if(content)
     convert_next_line_else(content)
-    convert_simple_range_for_loop(content)
+
+    # Optional stuff
+    convert_simple_range_for_loop(content) if options.convert_simple_for_loops
 
     # Global search/replace
     @renamed_vars.each { |v, nv|

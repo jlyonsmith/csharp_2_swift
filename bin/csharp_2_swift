@@ -1,4 +1,4 @@
 #!/usr/bin/env ruby
 
 require 'csharp_2_swift'
-Csharp2Swift.new.execute
+Csharp2Swift.new.execute(ARGV)
