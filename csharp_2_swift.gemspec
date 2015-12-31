@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'csharp_2_swift'
-  s.version = '1.0.0'
+  s.version = '1.0.1'
   s.date = '2015-12-30'
   s.summary = "Simple C# to Swift Converter"
   s.description = %Q(A tool that does a simple conversion of C# code to Swift.
@@ -10,7 +10,9 @@ and leaves you to figure out the framework related stuff.
   s.authors = ["John Lyon-smith"]
   s.email = "john@jamoki.com"
   s.files = [
-      "lib/csharp_2_swift.rb"]
+      "lib/csharp_2_swift.rb",
+      "lib/core_ext.rb"
+  ]
   s.executables = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.homepage = 'http://rubygems.org/gems/csharp_2_swift'
   s.license  = 'MIT'

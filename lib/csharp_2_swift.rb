@@ -3,7 +3,7 @@ require 'optparse'
 require 'colorize'
 require_relative './core_ext.rb'
 
-$VERSION='1.0.0-20151230.1'
+$VERSION='1.0.1-20151230.3'
 
 class Csharp2Swift
 
